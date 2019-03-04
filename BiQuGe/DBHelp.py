@@ -18,3 +18,33 @@ class DBHelp():
     def close(self):
         self.cursor.close()
         self.db.close()
+
+
+
+        # 数据增删改
+
+
+
+    def cud(self, sql, params):
+        self.openDB()
+
+        try:
+            self.cursor.execute(sql, params)
+            self.db.commit()
+            print("ok")
+        except:
+
+            print('cud出现错误')
+
+            self.db.rollback()
+
+            self.close()
+
+    def find(self, sql, params):
+        self.openDB()
+        try:
+            result = self.cursor.execute(sql, params)
+            self.close()
+            return result
+        except:
+            print('find出现错误')

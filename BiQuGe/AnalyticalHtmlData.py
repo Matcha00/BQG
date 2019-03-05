@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+from DBHelp import *
+db = DBHelp(host="localhost",port=3306,user='root',password='123456',database='BQG',charset='utf8')
 
 url = "http://www.biquge.cm/paihangbang/allvote.html"
 header = {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
@@ -22,3 +24,6 @@ for a in bs:
 #a_title = a.find('a').get("title")
     print(a_url)
     print(a_title)
+    sql = "INSERT INTO pystroy (storyurl,storyname,status) VALUES (%s,%s,%s)"
+    data = (a_url, a_title, 1)
+    db.cud(sql, data)

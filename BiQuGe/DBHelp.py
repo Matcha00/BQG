@@ -3,8 +3,9 @@ import pymysql
 
 class DBHelp():
 
-    def __init__(self,host,user,password,database,charset):
+    def __init__(self,host,port,user,password,database,charset):
         self.host = host
+        self.port = port
         self.user = user
         self.password = password
         self.database = database
@@ -13,7 +14,7 @@ class DBHelp():
         self.cursor = None
     def openDB(self):
 
-        self.db = pymysql.connect(host=self.host,user=self.user,password=self.password,database=self.database,charset=self.charset)
+        self.db = pymysql.connect(host=self.host,port = self.port,user=self.user,password=self.password,database=self.database,charset=self.charset)
         self.cursor = self.db.cursor()
     def close(self):
         self.cursor.close()
@@ -32,9 +33,9 @@ class DBHelp():
             self.cursor.execute(sql, params)
             self.db.commit()
             print("ok")
-        except:
+        except Exception as e:
 
-            print('cud出现错误')
+            print(e)
 
             self.db.rollback()
 
@@ -48,3 +49,17 @@ class DBHelp():
             return result
         except:
             print('find出现错误')
+
+    def cud_sql(self,sql):
+        self.openDB()
+        try:
+            self.cursor.execute(sql)
+            self.db.commit()
+            #self.db.close()
+            print('ok')
+            print(self.db)
+            print(self.cursor)
+        except Exception as e:
+            self.db.rollback()
+            self.close()
+            print(e)
